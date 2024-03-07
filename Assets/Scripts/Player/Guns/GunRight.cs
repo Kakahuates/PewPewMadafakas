@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,10 @@ public class GunRight : MonoBehaviour
     [SerializeField] private Transform initialPos;
     [SerializeField] private Rigidbody bullet;
 
+    private Ray ray;
+    private RaycastHit hit;
+    private float rayDistance;
+    
     [Header("Camera")] 
     [SerializeField] private PlayerMovement catBaseScript;
     private Vector3 direction;
@@ -30,9 +35,9 @@ public class GunRight : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.DrawRay(initialPos.position, direction + catBaseScript.camera.forward * catBaseScript.camDistanceZ, Color.red );
+        //Debug.DrawRay(initialPos.position, direction + catBaseScript.camera.forward * catBaseScript.camDistanceZ, Color.red );
         
-        Debug.DrawRay(catBaseScript.camera.position, catBaseScript.camera.forward * catBaseScript.camDistanceZ, Color.yellow);
+        //Debug.DrawRay(catBaseScript.camera.position, catBaseScript.camera.forward * catBaseScript.camDistanceZ, Color.yellow);
         
     }
 

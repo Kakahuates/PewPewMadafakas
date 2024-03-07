@@ -11,13 +11,14 @@ public class GunLeft : MonoBehaviour
 
     private Ray ray;
     private RaycastHit hit;
+    private float rayDistance;
 
     [Header("Camera")] 
     [SerializeField] private PlayerMovement catBaseScript;
     private Camera cam;
     private Vector3 direction;
     [SerializeField] private LayerMask aimLayerMask = new LayerMask();
-    //[SerializeField] private Transform debugTransform;
+    
     
     [Header("Vfx")] 
     [SerializeField] private Transform muzzlePos;
@@ -39,9 +40,8 @@ public class GunLeft : MonoBehaviour
     private void FixedUpdate()
     {
         RaycastCam();
-        //Debug.DrawRay(initialPos.position, direction + catBaseScript.camera.forward * catBaseScript.camDistanceZ, Color.red );
         
-        //Debug.DrawRay(catBaseScript.camera.position, catBaseScript.camera.forward * catBaseScript.camDistanceZ, Color.yellow);
+        
         
         
     }
@@ -49,19 +49,21 @@ public class GunLeft : MonoBehaviour
     private void RaycastCam()
     {
         
+        
         Vector3 rayCamOrigin = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
         ray = new Ray(rayCamOrigin, cam.transform.forward);
         
         if (Physics.Raycast(ray, out hit, 999f, aimLayerMask))
         {
-            //debugTransform.position = hit.point;
-            
-            //Debug.DrawRay(initialPos.position, initialPos.forward * 100, Color.black);
+            rayDistance = hit.distance;
+            Debug.Log(rayDistance);
+            Debug.DrawLine(initialPos.position, hit.point, Color.red);
+            Debug.DrawRay(cam.transform.position, cam.transform.forward * rayDistance, Color.yellow);
         }
-        // else
-        // {
-        //     //Debug.DrawRay(initialPos.position, initialPos.forward * 100,Color.magenta);
-        // }
+        else
+        {
+            //Debug.DrawRay(initialPos.position, initialPos.forward * 100,Color.magenta);
+        }
     }
 
     public void CanShoot()
@@ -69,7 +71,7 @@ public class GunLeft : MonoBehaviour
         MuzzleVFX();
         Debug.Log("Disparo");
         Rigidbody bulletClone = Instantiate(bullet, initialPos.position, initialPos.rotation);
-        bulletClone.transform.LookAt(initialPos.position + initialPos.forward + direction + catBaseScript.camera.forward * catBaseScript.camDistanceZ);
+        bulletClone.transform.LookAt(initialPos.position + initialPos.forward + direction + catBaseScript.camera.forward * rayDistance);
         bulletClone.AddForce(bulletClone.transform.forward * catBaseScript.shootForce, ForceMode.VelocityChange);
             
         Destroy(bulletClone.gameObject, 10.0f);
